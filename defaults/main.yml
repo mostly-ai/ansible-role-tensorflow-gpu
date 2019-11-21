@@ -1,0 +1,32 @@
+---
+# defaults file for ansible-role-tensorflow-gpu
+# By default gpu is False, set it to True on the gpu nodes in the hosts file
+
+gpu: false
+
+nvidia_driver_version: "418"
+cuda_version: "10.0.130"
+nccl_version: "2.5.6"
+cudnn_version: "7.6.5.32"
+tensor_rt_version: "6.0.1"
+
+cuda_repo_url: "http://developer.download.nvidia.com/compute/cuda/repos/"
+machine_learning_repo_url: "http://developer.download.nvidia.com/compute/machine-learning/repos/"
+nvidia_rpm_key_path: /etc/rpm/nvidia_packaging_key.asc
+nvidia_restart_node_on_install: True
+nvidia_init: True
+nvidia_init_restart_service: True
+nvidia_init_compute_mode: 3
+nvidia_init_persistence_mode: 1
+nvidia_gpu_name0: "/dev/nvidia0"
+nvidia_bash_profile: True
+cuda_bash_path: "/usr/local/cuda/bin"
+cuda_bash_ld_lib_path: "/usr/local/cuda/lib64"
+cuda_bash_cuda_root: "/usr/local/cuda"
+cuda_bash_cuda_inc_dir: "/usr/local/cuda/bin"
+cuda_bash_cpath: "/usr/local/cuda/include"
+nvidia_bash_path: "/usr/local/nvidia/bin"
+nvidia_bash_ld_lib_path: "/usr/local/nvidia/lib"
+nvidia_bash_ld_lib64_path: "/usr/local/nvidia/lib64"
+
+# vim:ft=ansible:

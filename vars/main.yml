@@ -1,0 +1,5 @@
+---
+# vars file for ansible-role-tensorflow-gpu
+nvidia_packaging_key_id: 7FA2AF80
+
+# vim:ft=ansible:

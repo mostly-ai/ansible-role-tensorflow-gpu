@@ -1,0 +1,21 @@
+---
+nvidia_repo_subfolder: ubuntu1804
+
+nvidia_driver_major_version: "{{ nvidia_driver_version | regex_replace('^([0-9]+).*', '\\1') }}"
+cuda_short_version: "{{ cuda_version | regex_replace('^([0-9]+)\\.([0-9]+).*', '\\1.\\2') }}"
+cuda_pkg_version: "{{ cuda_version | regex_replace('^([0-9]+)\\.([0-9]+).*', '\\1-\\2') }}"
+nccl_major_version: "{{ nccl_version | regex_replace('^([0-9]+).*', '\\1') }}"
+cudnn_major_version: "{{ cudnn_version | regex_replace('^([0-9]+).*', '\\1') }}"
+tensor_rt_major_version: "{{ tensor_rt_version | regex_replace('^([0-9]+).*', '\\1') }}"
+
+nvidia_packages:
+ - "nvidia-driver-{{ nvidia_driver_major_version }}"
+ - "cuda-cudart-{{ cuda_pkg_version }}={{ cuda_version }}-1"
+ - "cuda-compat-{{ cuda_pkg_version }}"
+ - "cuda-libraries-{{ cuda_pkg_version }}"
+ - "cuda-nvtx-{{ cuda_pkg_version }}"
+ - "libnccl{{ nccl_major_version }}={{ nccl_version }}-1+cuda{{ cuda_short_version }}"
+ - "libcudnn{{ cudnn_major_version }}={{ cudnn_version }}-1+cuda{{ cuda_short_version }}"
+ - "libnvinfer{{ tensor_rt_major_version }}={{ tensor_rt_version }}-1+cuda{{ cuda_short_version }}"
+
+# vim:ft=ansible:

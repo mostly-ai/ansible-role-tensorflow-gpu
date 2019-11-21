@@ -1,0 +1,37 @@
+---
+# tasks file for ansible-role-tensorflow-gpu
+- name: Upload packaging key for Nvidia repositories
+  copy:
+    src: nvidia_packaging_key.asc
+    dest: "{{ nvidia_rpm_key_path }}"
+    mode: 0644
+
+- name: Trust packaging key for Nvidia repositories (rpm)
+  rpm_key:
+    key: "{{ nvidia_rpm_key_path }}"
+    state: present
+
+- name: Remove trust for old Nvidia packaging key
+  rpm_key:
+    key: 5C37D3BE
+    state: absent
+
+- name: Configure Nvidia CUDA repository (yum)
+  yum_repository:
+    name: nvidia
+    description: Official Nvidia repository
+    baseurl: "{{ cuda_repo_url }}/{{ nvidia_repo_subfolder }}/x86_64/"
+    gpgkey: "file://{{ nvidia_rpm_key_path }}"
+    gpgcheck: yes
+    enabled: yes
+
+- name: Configure Nvidia machine learning repository (yum)
+  yum_repository:
+    name: nvidia
+    description: Official Nvidia repository
+    baseurl: "{{ machine_learning_repo_url }}/{{ nvidia_repo_subfolder }}/x86_64/"
+    gpgkey: "file://{{ nvidia_rpm_key_path }}"
+    gpgcheck: yes
+    enabled: yes
+
+# vim:ft=ansible:

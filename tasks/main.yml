@@ -1,0 +1,57 @@
+---
+# tasks file for ansible-role-tensorflow-gpu
+- name: "Gather OS specific variables"
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution|lower }}-{{ ansible_distribution_version }}.yml"
+    - "{{ ansible_distribution|lower }}-{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_distribution|lower }}.yml"
+    - "{{ ansible_os_family|lower }}.yml"
+
+- name: Print some debug information
+  vars:
+    msg: |
+      gpu: {{ nvidia_packages }}
+  debug:
+    msg: "{{ msg.split('\n') }}"
+  tags: debug_info
+
+- block:
+  - include_tasks: configure_yum.yml
+    when: ansible_pkg_mgr == 'yum'
+
+  - include_tasks: configure_apt.yml
+    when: ansible_pkg_mgr == 'apt'
+
+  - name: Install CUDA packages (300MB download, also restarts if nvidia_restart_node_on_install is set to True)
+    package:
+      name: "{{ item }}"
+      state: present
+    with_items: "{{ nvidia_packages }}"
+
+  - name: Set installed cuda version as system cuda
+    command: /bin/ln -s "/usr/local/cuda-{{ cuda_short_version }}" "{{ cuda_bash_cuda_root }}"
+    register: nvidia_packages_installation
+    notify:
+     - ZZ Nvidia Restart server
+     - ZZ Nvidia Wait for server to restart
+
+  - name: Template CUDA paths to user environments
+    template:
+      src: nvidia.sh.j2
+      dest: /etc/profile.d/nvidia.sh
+      mode: 0755
+    when: nvidia_bash_profile|bool
+
+  - include_tasks: nvidia_init.yml
+    when: nvidia_init
+
+  # This is here because if we in the same playbook try to start slurmd without
+  # having run the nvidia_init.sh script then slurmd doesn't start and the play fails.
+  # todo: reload nvidia modules/etc instead of restart
+  - name: flush the handlers - so that GPUs are initialized before we start slurm
+    meta: flush_handlers
+
+  when: gpu
+
+# vim:ft=ansible:

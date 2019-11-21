@@ -1,0 +1,4 @@
+---
+nvidia_repo_subfolder: rhel7
+
+# vim:ft=ansible:
