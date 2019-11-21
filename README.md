@@ -17,7 +17,7 @@ Role Variables
 --------------
 
     gpu: false
-    nvidia_driver_version: "418.87.01"
+    nvidia_driver_version: "418"
     cuda_version: "10.0.130"
     nccl_version: "2.5.6"
     cudnn_version: "7.6.5.32"
