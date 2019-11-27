@@ -30,7 +30,10 @@
     with_items: "{{ nvidia_packages }}"
 
   - name: Set installed cuda version as system cuda
-    command: /bin/ln -s "/usr/local/cuda-{{ cuda_short_version }}" "{{ cuda_bash_cuda_root }}"
+    file:
+      src: "/usr/local/cuda-{{ cuda_short_version }}"
+      dest: "{{ cuda_bash_cuda_root }}"
+      state: link
     register: nvidia_packages_installation
     notify:
      - ZZ Nvidia Restart server
