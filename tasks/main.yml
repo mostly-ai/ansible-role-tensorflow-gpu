@@ -8,14 +8,6 @@
     - "{{ ansible_distribution|lower }}.yml"
     - "{{ ansible_os_family|lower }}.yml"
 
-- name: Print some debug information
-  vars:
-    msg: |
-      gpu: {{ nvidia_packages }}
-  debug:
-    msg: "{{ msg.split('\n') }}"
-  tags: debug_info
-
 - block:
   - include_tasks: configure_yum.yml
     when: ansible_pkg_mgr == 'yum'
